@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import peaksoft.repository.AuthInfoRepository;
+import peaksoft.repository.UserRepository;
 
 import java.util.NoSuchElementException;
 
@@ -27,15 +27,16 @@ import java.util.NoSuchElementException;
 @EnableMethodSecurity
 public class WebAppSecurity {
 
-    private final AuthInfoRepository authInfoRepository;
+    private final UserRepository userRepository;
 
-    public WebAppSecurity(AuthInfoRepository authInfoRepository) {
-        this.authInfoRepository = authInfoRepository;
+    public WebAppSecurity(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return email -> authInfoRepository.findByEmail(email)
+        return email -> userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("email with = " + email + "not found "));
     }
 
